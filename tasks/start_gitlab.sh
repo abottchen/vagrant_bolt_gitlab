@@ -1,2 +1,2 @@
 #!/bin/bash
-docker start gitlab
+systemctl start docker-gitlab

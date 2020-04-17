@@ -1,2 +1,2 @@
 #!/bin/bash
-docker stop gitlab
+systemctl stop docker-gitlab

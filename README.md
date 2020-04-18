@@ -4,4 +4,7 @@ Yes, I know it is a terrible idea to ship certificates along with the package.
 
 Usage:
 
-bolt plan run vagrant_bolt_gitlab::install -m modules:.. -t TARGETS
+```
+# bolt puppetfile install -m modules --puppetfile ./Puppetfile
+# bolt plan run vagrant_bolt_gitlab::install -m modules:.. -t TARGETS
+```

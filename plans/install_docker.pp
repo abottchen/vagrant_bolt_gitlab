@@ -7,8 +7,8 @@ plan vagrant_bolt_gitlab::install_docker(
     include docker
 
     docker::run { 'gitlab':
-      image   => 'gitlab/gitlab-ce:latest',
-      ports   => ['80:80','443:443'],
+      image   => 'gitlab/gitlab-ce:12.10.1-ce.0',
+      ports   => ['80:80','443:443','8022:22'],
       volumes => [
                          'gitlab_etc:/etc/gitlab', 
                          'gitlab_opt:/var/opt/gitlab', 

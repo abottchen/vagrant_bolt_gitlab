@@ -1,9 +1,6 @@
 #!/bin/bash
-cat /tmp/opt_data.tar.gz.a* >> /tmp/opt_data.tar.gz
-tar -xvf /tmp/etc_data.tar.gz -C /
-tar -xvf /tmp/log_data.tar.gz -C /
-tar -xvf /tmp/opt_data.tar.gz -C /
-rm /tmp/etc_data.tar.gz
-rm /tmp/log_data.tar.gz
-rm /tmp/opt_data.tar.gz
-rm /tmp/opt_data.tar.gz.a*
+tar -xvf /tmp/etc.tar.gz -C /
+rm /tmp/etc.tar.gz
+docker exec -it gitlab sed -ie "s/ask_to_continue//g" /opt/gitlab/embedded/service/gitlab-rails/lib/tasks/gitlab/backup.rake
+docker exec -it gitlab sed -ie "s/ask_to_continue//g" /opt/gitlab/embedded/service/gitlab-rails/lib/tasks/gitlab/shell.rake
+docker exec -it gitlab gitlab-backup restore

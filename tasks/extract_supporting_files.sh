@@ -6,6 +6,6 @@ docker exec -i gitlab sed -ie "s/ask_to_continue//g" /opt/gitlab/embedded/servic
 echo "Removing second prompt from restore script"
 docker exec -i gitlab sed -ie "s/ask_to_continue//g" /opt/gitlab/embedded/service/gitlab-rails/lib/tasks/gitlab/shell.rake
 echo "Running gitlab restore"
-docker exec -i gitlab gitlab-backup restore > /tmp/gitlab_restore.log
+docker exec -i gitlab gitlab-backup restore > /tmp/gitlab_restore.log 2>&1
 echo "Cleaning up configuration data"
 rm /tmp/etc.tar.gz

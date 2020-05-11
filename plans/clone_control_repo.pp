@@ -1,6 +1,6 @@
 plan vagrant_bolt_gitlab::clone_control_repo(
   TargetSpec $gitlab,
-  TargetSpec $target,
+  TargetSpec $targets,
 ) {
 
   out::message("Gathering facts from gitlab server")
@@ -9,9 +9,10 @@ plan vagrant_bolt_gitlab::clone_control_repo(
   $gitlab_facts = get_target($gitlab).facts()
   $gitlab_fqdn = $gitlab_facts['fqdn']
 
-  $target.apply_prep
-  apply($target) {
-    file {'/root/.ssh/id_rsa-vagrant-bolt-gitlab':
+  $targets.apply_prep
+  apply($targets) {
+    $keypath = '/root/.ssh/id_rsa-vagrant-bolt-gitlab'
+    file {$keypath:
       ensure => file,
       source => 'puppet:///modules/vagrant_bolt_gitlab/ssh.key',
       owner  => 'root',
@@ -28,7 +29,7 @@ plan vagrant_bolt_gitlab::clone_control_repo(
           'HashKnownHosts'           => 'yes',
           'User'                     => 'git',
           'StrictHostKeyChecking'    => 'no',
-          'IdentityFile'             => '/root/.ssh/id_rsa-vagrant-bolt-gitlab',
+          'IdentityFile'             => $keypath,
           'PreferredAuthentications' => 'publickey',
           'UserKnownHostsFile'       => '/dev/null',
           'Port'                     => '8022',
@@ -42,14 +43,16 @@ plan vagrant_bolt_gitlab::clone_control_repo(
 
     exec {'pull control repo':
       path    => '/usr/bin',
-      command => "git clone git@${gitlab_fqdn}:/root/control-repo.git /root/dev/control-repo",
+      command => "bash -c \"/usr/bin/git clone git@${gitlab_fqdn}:/root/control-repo.git /root/dev/control-repo\"",
       unless  => '[ -d "/root/dev/control-repo" ]',
+      require => [File[$keypath], Ssh::Client::Config::User['root']]
     }
 
     exec {'pull module repo':
       path    => '/usr/bin',
-      command => "git clone git@${gitlab_fqdn}:/root/puppetlabs-motd.git /root/dev/puppetlabs-motd",
+      command => "bash -c \"/usr/bin/git clone git@${gitlab_fqdn}:/root/puppetlabs-motd.git /root/dev/puppetlabs-motd\"",
       unless  => '[ -d "/root/dev/puppetlabs-motd" ]',
+      require => [File[$keypath], Ssh::Client::Config::User['root']]
     }
   }
 }

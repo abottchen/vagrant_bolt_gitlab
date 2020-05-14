@@ -7,14 +7,15 @@ plan vagrant_bolt_gitlab::install_docker(
     include docker
 
     docker::run { 'gitlab':
-      image   => 'gitlab/gitlab-ce:12.10.1-ce.0',
-      ports   => ['80:80','443:443','8022:22'],
-      volumes => [
-                         'gitlab_etc:/etc/gitlab', 
-                         'gitlab_opt:/var/opt/gitlab', 
+      image         => 'gitlab/gitlab-ce:12.10.1-ce.0',
+      ports         => ['80:80','443:443','8022:22'],
+      hostname      => $facts['fqdn'],
+      volumes       => [
+                         'gitlab_etc:/etc/gitlab',
+                         'gitlab_opt:/var/opt/gitlab',
                          'gitlab_log:/var/log/gitlab'
                         ],
-      pull_on_start    => true,
+      pull_on_start => true,
     }
   }
 

@@ -41,18 +41,22 @@ plan vagrant_bolt_gitlab::clone_control_repo(
       ensure => directory,
     }
 
+    package {'git':
+      ensure => present,
+    }
+
     exec {'pull control repo':
       path    => '/usr/bin',
       command => "bash -c \"/usr/bin/git clone git@${gitlab_fqdn}:/root/control-repo.git /root/dev/control-repo\"",
       unless  => '[ -d "/root/dev/control-repo" ]',
-      require => [File[$keypath], Ssh::Client::Config::User['root']]
+      require => [File[$keypath], Ssh::Client::Config::User['root'], Package['git']]
     }
 
     exec {'pull module repo':
       path    => '/usr/bin',
       command => "bash -c \"/usr/bin/git clone git@${gitlab_fqdn}:/root/puppetlabs-motd.git /root/dev/puppetlabs-motd\"",
       unless  => '[ -d "/root/dev/puppetlabs-motd" ]',
-      require => [File[$keypath], Ssh::Client::Config::User['root']]
+      require => [File[$keypath], Ssh::Client::Config::User['root'], Package['git']]
     }
   }
 }

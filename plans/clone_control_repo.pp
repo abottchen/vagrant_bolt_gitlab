@@ -18,7 +18,7 @@ plan vagrant_bolt_gitlab::clone_control_repo(
       ensure        => present,
       user_home_dir => '/root',
       options       => {
-      "Host ${gitlab}.*" =>
+      "Host ${gitlab}" =>
         {
           'HashKnownHosts'           => 'yes',
           'User'                     => 'git',
